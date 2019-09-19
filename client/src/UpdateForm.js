@@ -13,7 +13,6 @@ class UpdateForm extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(this.props)
     if (this.props.movies !== prevProps.movies) {
       this.populateMovie();
     }
@@ -22,7 +21,6 @@ class UpdateForm extends React.Component {
   populateMovie = () => {
     const id = this.props.match.params.id;
     const movieToEdit = this.props.movies.find(movie => `${movie.id}` === id)
-    console.log(movieToEdit)
     if (movieToEdit) this.setState({ movie: movieToEdit })
   }
 
@@ -39,8 +37,9 @@ class UpdateForm extends React.Component {
     e.preventDefault();
     axios.put(`http://localhost:5000/api/movies/${this.state.movie.id}`, this.state.movie)
       .then(res => {
-        console.log(res)
-        // this.setState({ movie: emptyForm })
+        this.props.updateMovies(res.data)
+        this.setState({ movie: emptyForm })
+        this.props.history.push(`/movies/${this.props.match.params.id}`)
       })
       .catch(err => console.log(err))
   }
