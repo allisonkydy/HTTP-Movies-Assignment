@@ -57,37 +57,44 @@ class UpdateForm extends React.Component {
   render() {
     console.log(this.state.movie)
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input 
-          type="text"
-          name="title"
-          value={this.state.movie.title}
-          onChange={this.handleChange}
-        />
-        <input 
-          type="text"
-          name="director"
-          value={this.state.movie.director}
-          onChange={this.handleChange}
-        />
-        <input 
-          type="number"
-          name="metascore"
-          value={this.state.movie.metascore}
-          onChange={this.handleChange}
-        />
-        {this.state.movie.stars.map((star, index) => {
-          return (
-            <input 
-              type="text"
-              name="stars"
-              value={star}
-              onChange={(e) => this.handleStars(e, index)}
-            />
-          )
-        })}
-        <button>edit</button>
-      </form>
+      <div className="saved-list update-form">
+        <h2>Update Movie</h2>
+        <form onSubmit={this.handleSubmit}>
+          <h4>Title:</h4>
+          <input 
+            type="text"
+            name="title"
+            value={this.state.movie.title}
+            onChange={this.handleChange}
+          />
+          <h4>Director:</h4>          
+          <input 
+            type="text"
+            name="director"
+            value={this.state.movie.director}
+            onChange={this.handleChange}
+          />
+          <h4>Metascore:</h4> 
+          <input 
+            type="number"
+            name="metascore"
+            value={this.state.movie.metascore}
+            onChange={this.handleChange}
+          />
+          <h4>Actors:</h4>
+          {this.state.movie.stars.map((star, index) => {
+            return (
+              <input 
+                type="text"
+                name="stars"
+                value={star}
+                onChange={(e) => this.handleStars(e, index)}
+              />
+            )
+          })}
+          <button>Edit</button>
+        </form>
+      </div>
     )
   }
 }
