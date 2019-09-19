@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 
-const emptyForm = { title: '', director: '', metascore: '' }
+const emptyForm = { title: '', director: '', metascore: '', stars: [] }
 
 class UpdateForm extends React.Component {
   state = {
@@ -33,6 +33,16 @@ class UpdateForm extends React.Component {
     })
   }
 
+  handleStars = (e, index) => {
+    const newStars = this.state.movie.stars.map((star, i) => i === index ? e.target.value : star);
+    this.setState({
+      movie: {
+        ...this.state.movie,
+        stars: newStars
+      }
+    })
+  }
+
   handleSubmit = e => {
     e.preventDefault();
     axios.put(`http://localhost:5000/api/movies/${this.state.movie.id}`, this.state.movie)
@@ -45,6 +55,7 @@ class UpdateForm extends React.Component {
   }
 
   render() {
+    console.log(this.state.movie)
     return (
       <form onSubmit={this.handleSubmit}>
         <input 
@@ -65,12 +76,16 @@ class UpdateForm extends React.Component {
           value={this.state.movie.metascore}
           onChange={this.handleChange}
         />
-        {/* <input 
-          type="text"
-          name="stars"
-          value={this.state.movie.stars}
-          onChange={this.handleChange}
-        /> */}
+        {this.state.movie.stars.map((star, index) => {
+          return (
+            <input 
+              type="text"
+              name="stars"
+              value={star}
+              onChange={(e) => this.handleStars(e, index)}
+            />
+          )
+        })}
         <button>edit</button>
       </form>
     )
