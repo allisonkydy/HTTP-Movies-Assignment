@@ -33,7 +33,6 @@ const App = () => {
   const deleteMovie = id => {
     axios.delete(`http://localhost:5000/api/movies/${id}`)
     .then(res => {
-      // console.log(res)
       setMovies(movies.filter(movie => movie.id !== res.data));
       })
       .catch(err => console.log(err))
