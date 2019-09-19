@@ -1,27 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 
-const emptyForm = { title: '', director: '', metascore: '', stars: [] }
+const emptyForm = { title: '', director: '', metascore: '', stars: ['', '', ''] }
 
-class UpdateForm extends React.Component {
+class AddForm extends React.Component {
   state = {
     movie: emptyForm
-  }
-
-  componentDidMount() {
-    this.populateMovie();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.movies !== prevProps.movies) {
-      this.populateMovie();
-    }
-  }
-
-  populateMovie = () => {
-    const id = this.props.match.params.id;
-    const movieToEdit = this.props.movies.find(movie => `${movie.id}` === id)
-    if (movieToEdit) this.setState({ movie: movieToEdit })
   }
 
   handleChange = e => {
@@ -33,8 +17,12 @@ class UpdateForm extends React.Component {
     })
   }
 
-  handleStars = (e, index) => {
-    const newStars = this.state.movie.stars.map((star, i) => i === index ? e.target.value : star);
+  handleStars = (e) => {
+    const newStars = this.state.movie.stars.map((star, index) => {
+      if (`${index}` === e.target.name) return e.target.value;
+      else return star;
+    })
+    console.log(newStars)
     this.setState({
       movie: {
         ...this.state.movie,
@@ -45,19 +33,21 @@ class UpdateForm extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    axios.put(`http://localhost:5000/api/movies/${this.state.movie.id}`, this.state.movie)
+    axios.post(`http://localhost:5000/api/movies/`, this.state.movie)
       .then(res => {
-        this.props.updateMovies(res.data)
+        // console.log(res.data)
+        this.props.setMovies(res.data)
         this.setState({ movie: emptyForm })
-        this.props.history.push(`/movies/${this.props.match.params.id}`)
+        this.props.history.push(`/`)
       })
       .catch(err => console.log(err))
   }
 
   render() {
+    // console.log(this.state.movie)
     return (
       <div className="saved-list update-form">
-        <h2>Update Movie</h2>
+        <h2>Add Movie</h2>
         <form onSubmit={this.handleSubmit}>
           <h4>Title:</h4>
           <input 
@@ -81,21 +71,29 @@ class UpdateForm extends React.Component {
             onChange={this.handleChange}
           />
           <h4>Actors:</h4>
-          {this.state.movie.stars.map((star, index) => {
-            return (
-              <input 
-                type="text"
-                name="stars"
-                value={star}
-                onChange={(e) => this.handleStars(e, index)}
-              />
-            )
-          })}
-          <button>Edit</button>
+          <input 
+            type="text"
+            name="0"
+            value={this.state.movie.stars[0]}
+            onChange={this.handleStars}
+          />
+          <input 
+            type="text"
+            name="1"
+            value={this.state.movie.stars[1]}
+            onChange={this.handleStars}
+          />
+          <input 
+            type="text"
+            name="2"
+            value={this.state.movie.stars[2]}
+            onChange={this.handleStars}
+          />
+          <button>Add</button>
         </form>
       </div>
     )
   }
 }
 
-export default UpdateForm;
+export default AddForm;
